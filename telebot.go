@@ -39,7 +39,7 @@ type Bot struct{}
 // a couple (string, error) for every message. The returned string
 // will be sent to the user. If you set the error, the user will
 // see an informative message.
-type Responder func(string) (string, error)
+type Responder func(string, string) (string, error)
 
 // Configuration struct representing the configuration used from
 // the bot to run properly. Configuration is usually loaded from file,
@@ -217,7 +217,7 @@ func (t Bot) handleTeleMessages(infomes chan teleResults, conf Configuration, re
 		message := <-infomes
 		fmt.Println("INFO: Message: '" + message.Message.Text + "' From: '" + message.Message.Chat.Uname + "'")
 		// Answer message
-		answer := t.getResponse(message.Message.Text, conf, resp)
+		answer := t.getResponse(message.Message.From.Uname, message.Message.Text, conf, resp)
 
 		vals := url.Values{
 			"chat_id": {strconv.FormatInt(message.Message.Chat.Chatid, 10)},
@@ -234,13 +234,14 @@ func (t Bot) handleTeleMessages(infomes chan teleResults, conf Configuration, re
 // Process a single user message and returns the answer.
 // This method will remove the @BotName (e.g. /start@TestBot) from received message
 // to allow a unique interpretation of messages
-func (t Bot) getResponse(message string, conf Configuration, resp Responder) string {
+func (t Bot) getResponse(uName string, message string, conf Configuration, resp Responder) string {
 
 	var answer string
 	var err error
+
 	message = strings.Replace(message, "@"+conf.BotName, "", 1)
 
-	answer, err = resp(message)
+	answer, err = resp(uName, message)
 	if err != nil {
 		answer = "I'm not able to answer :("
 	}
