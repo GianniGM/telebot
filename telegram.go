@@ -13,11 +13,11 @@ type teleAnswer struct {
 // A telegram resource: id + message
 type teleResults struct {
 	Updid   int64       `json:"update_id"`
-	Message teleMessage `json:"message"`
+	Message TeleMessage `json:"message"`
 }
 
 // Details about the specific message
-type teleMessage struct {
+type TeleMessage struct {
 	Text  string   `json:"text"`
 	Mesid int64    `json:"message_id"`
 	From  teleFrom `json:"from"`
