@@ -23,13 +23,14 @@ func main() {
 	bot.Start(conf, func(receivedMessage telebot.TeleMessage) (string, error) {
 		var answer string
 
-		mess := receivedmessage.Text
+		var user := receivedMessage.From.Uname
+		mess := receivedMessage.Text
 
 		switch mess {
 		case "/test":
 			answer = "Test command works :)"
 		default:
-			answer = "You typed " + mess
+			answer = "Hi" + user + ": you typed " + mess
 		}
 		return answer, nil
 	})
